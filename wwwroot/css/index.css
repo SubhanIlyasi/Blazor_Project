@@ -1,0 +1,165 @@
+.list-unstyled li {
+    list-style: none;
+}
+
+.body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.card-body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.list-unstyled a {
+    text-decoration: none;
+    color: black; /* Adjust text color as needed */
+    margin-right: 15px; /* Add right margin for spacing */
+}
+
+    .list-unstyled a:hover {
+        color: rgb(45, 127, 175); /* Adjust hover color as needed */
+        text-decoration: underline;
+    }
+
+/* Add a more specific selector to override Bootstrap styles */
+input.search-input.form-control {
+    /* Default width for screens wider than md breakpoint */
+    width: 500px;
+    padding:20px;
+}
+
+/* Media query for screens up to md breakpoint */
+@media (max-width: 769px) {
+    /* Add a more specific selector to override Bootstrap styles */
+    input.search-input.form-control {
+        width: 50%; /* Set width to 100% to occupy full width of the container */
+    }
+}
+
+
+
+.search-button {
+    position: absolute;
+}
+
+.my-footer {
+    background-color: #f6f6f8;
+}
+
+.text-fotter {
+    color: #222222;
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.body {
+    font-family: "Montserrat", sans-serif;
+    color: #222222;
+    font-size: 15px;
+}
+
+.shop-category {
+    /*border-bottom: 1px solid #d7d4d4;*/
+    color: black;
+    text-align: center !important;
+    margin-right: auto;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+
+.footer-content {
+    background-color: #f6f6f8;
+    padding: 20px 0;
+}
+
+.social-buttons .btn {
+    background-color: #54456b;
+    margin: 0 5px;
+}
+
+.copyright {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+}
+
+/* CSS code */
+.list-unstyled li a {
+    color: #212529; /* Default color */
+    text-decoration: none; /* Remove underline by default */
+    font-family: "Montserrat", sans-serif;
+}
+
+    .list-unstyled li a:hover {
+        color: gray; /* Change color on hover */
+        text-decoration: none;
+    }
+
+.search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+}
+
+.search-icon {
+    color: #222222;
+}
+
+.search-input:focus, .search-button:focus {
+    outline: none;
+}
+
+.search-container {
+    position: relative;
+}
+
+
+.list-category {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center !important;
+    white-space: nowrap;
+
+}
+
+.quantity-product {
+    width: 40px;
+    border: none;
+}
+
+.custom-btn {
+    padding: 10px 20px;
+    background-color: #B85042;
+    /* Background color */
+    color: #E7E8D1;
+    /* Text color */
+    text-decoration: none;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #D36E5D;
+    /* Hover background color */
+}
+
+.home-link,
+.contact-link {
+    color: #6D5843;
+    /* Dark wooden brown color */
+}
+
+.card-img-top {
+    width: 100%;
+    
+    /* Ensures the image covers the space without distorting */
+}
+

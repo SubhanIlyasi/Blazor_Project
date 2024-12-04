@@ -1,0 +1,252 @@
+﻿@page "/checkout"
+@page "/checkout{productsjson}"
+@using Ilyasi_Garments.Models;
+@inject NavigationManager nv
+@inject ViewModelService v
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+<div class="container mt-4 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled d-flex flex-wrap styles justify-content-center">
+                @foreach (var c in viewModel.Categories)
+                {
+                    <li>
+                        <div class="col-2">
+                            @if (selectedCategory == c.Type)
+                            {
+                                <button class="list-category btn btn-transparent" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="list-category btn btn-outline-secondary" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+@* <EditForm Model="" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-between">
+            <div class="col-md-7 col-sm-12 mt-3">
+                <h4 class="text-dark">Billing Address</h4>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <InputText class="form-control" id="email" @bind-Value="checkoutModel.Email" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <InputText class="form-control" id="country" placeholder="Enter country" @bind-Value="checkoutModel.Country" required />
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="FirstName">FirstName</label>
+                            <InputText class="form-control" id="FirstName" placeholder="Enter First name" @bind-Value="checkoutModel.FirstName" required />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="LastName">Last Name</label>
+                            <InputText class="form-control" id="LastName" placeholder="Enter last name" @bind-Value="checkoutModel.LastName" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <InputText class="form-control" id="address" placeholder="Enter address" @bind-Value="checkoutModel.Address" required />
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="city">City</label>
+                            <InputText class="form-control" id="city" placeholder="Enter city" @bind-Value="checkoutModel.City" required />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="zipCode">Zip Code</label>
+                            <InputText class="form-control" id="zipCode" placeholder="Enter zip code" @bind-Value="checkoutModel.Zip" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone Number</label>
+                    <InputTel class="form-control" id="PhoneNumber" placeholder="Enter Phone Number" @bind-Value="checkoutModel.PhoneNumber" required />
+                </div>
+
+                <h4 class="mt-4 text-dark">Payment</h4>
+
+                <!-- Payment options -->
+                <div class="form-check">
+                    <InputRadio class="form-check-input" id="creditCard" name="paymentMethod" @bind-Value="checkoutModel.PaymentMethod" Value="CreditCard" />
+                    <label class="form-check-label" for="creditCard">
+                        <span class="font-weight-bold">Credit Card</span>
+                    </label>
+
+                    <div>
+                        <div class="form-group mt-3">
+                            <label for="cardNumber">Credit Card Name</label>
+                            <InputText class="form-control" id="cardNumber" placeholder="Enter card Name" @bind-Value="checkoutModel.CreditCardName" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="cardNumber">Credit Card Number</label>
+                            <InputText class="form-control" id="cardNumber" placeholder="Enter card number" @bind-Value="checkoutModel.CreditCardNumber" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <InputRadio class="form-check-input" id="DebitCard" name="paymentMethod" @bind-Value="checkoutModel.PaymentMethod" Value="DebitCard" />
+                    <label class="form-check-label" for="DebitCard">
+                        <span class="font-weight-bold">Debit Card</span>
+                    </label>
+
+                    <div>
+                        <div class="form-group mt-3">
+                            <label for="DebitCardName">Debit Card Name</label>
+                            <InputText class="form-control" id="DebitCardName" placeholder="Enter card Name" @bind-Value="checkoutModel.DebitCardName" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="DebitCardNumber">Debit Card Number</label>
+                            <InputText class="form-control" id="DebitCardNumber" placeholder="Enter card number" @bind-Value="checkoutModel.DebitCardNumber" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <InputRadio class="form-check-input" id="Cashondelivery" name="paymentMethod" @bind-Value="checkoutModel.PaymentMethod" Value="CashonDelivery" />
+                    <label class="form-check-label" for="Cashondelivery">
+                        <span class="font-weight-bold">Cash on Delivery</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-outline-dark btn-lg mt-4">Place Order</button>
+            </div>
+
+            <div class="col-md-4 col-sm-12 mt-3" style="background-color:#eee;">
+                <NavLink class="nav-link" href="/cart">
+                    <h4 class="text-dark">Your Cart</h4>
+                </NavLink>
+
+                <div class="card">
+                    <div class="card-body">
+                        @foreach (var product in p)
+                        {
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <img src="@Url.Content(product.ImageUrl)" class="w-100" alt="@product.Id" />
+                                </div>
+                                <div class="col-8">
+                                    <p>@product.Name</p>
+                                    <p class="card-text">Rs <span>@product.Price</span></p>
+                                </div>
+                            </div>
+                            total_price += product.Price * product.Quantity;
+                        }
+                    </div>
+                </div>
+
+                <input type="hidden" id="total_price" name="Bill" value="@total_price" />
+
+                <div class="form-group mt-4">
+                    <div class="row">
+                        <div class="col-9">
+                            <InputText class="form-control" id="promoCode" placeholder="Discount code or gift code" />
+                        </div>
+                        <div class="col-3">
+                            <button type="button" class="btn btn-dark">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="row">
+                        <div class="col-7">
+                            <p>SubTotal</p>
+                        </div>
+                        <div class="col-5">
+                            Rs <span>@total_price</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="row">
+                        <div class="col-7">
+                            <p>Shipping</p>
+                        </div>
+                        <div class="col-5">
+                            Rs 00.00
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="row">
+                        <div class="col-7">
+                            <p>Total</p>
+                        </div>
+                        <div class="col-5">
+                            Rs <span>@total_price</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm> *@
+
+@code {
+    public ViewModel viewModel { get; set; }
+    public List<Product> products { get; set; }
+    private string selectedCategory { get; set; } = string.Empty;
+    [Parameter]
+    public string productsjson { get; set; }
+    public List<Product> p = new List<Product>();
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(productsjson))
+        {
+            // Deserialize the JSON string to a Product object
+            p = System.Text.Json.JsonSerializer.Deserialize<List<Product>>(productsjson);
+        }
+       
+    }
+
+    protected override void OnInitialized()
+    {
+        viewModel = new ViewModel();
+        viewModel.Products = v.GetProducts();
+        viewModel.Categories = v.GetCategories();
+    }
+
+    private void NavigateToCategory(string categoryType)
+    {
+        nv.NavigateTo($"/products/{categoryType}");
+    }
+
+    private double total_price;
+
+    // On valid submit, handle the order submission
+    private void HandleSubmit()
+    {
+        // Logic to handle form submission, such as placing an order.
+        // This can involve sending data to a server, navigating, etc.
+        //Navigation.NavigateTo("/order/confirm");
+    }
+}

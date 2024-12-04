@@ -1,0 +1,119 @@
+﻿@page "/cart"
+@page "/cart{productsjson}"
+@using Ilyasi_Garments.Models;
+@inject NavigationManager nv
+@layout NullLayout
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Cart</title>
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link href="~/css/cart.css" rel="stylesheet" />
+
+</head>
+<body className='snippet-body'>
+
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-12 cart">
+                <div class="title">
+                    <div class="row">
+                        <div class="col"><h4><b>Shopping Cart</b></h4></div>
+                        @{
+                            int x = 0;
+                            foreach (var c in p)
+                            {
+                                x += c.Quantity;
+                            }
+                        }
+                        <div class="col align-self-center text-right text-muted">@x items</div>
+                    </div>
+                </div>
+
+                @foreach (var cart in p)
+                {
+                    <div class="row border-top border-bottom">
+                        <div class="row main align-items-center">
+                            <div class="col-2"><img class="img-fluid" src="@cart.ImageUrl"></div>
+                            <div class="col">
+
+                                <div class="row">@cart.Name</div>
+                            </div>
+                            <div class="col">
+                                <span class="text-dark">@cart.Quantity</span>
+                            </div>
+                            <div class="col">@cart.Price <span class="close">&#10005;</span></div>
+                        </div>
+                    </div>
+                }
+                
+                @* <a href="@Url.Action("Checkout", "Cart")" class="btn btn-dark btn-block">CHECK OUT</a>
+                <div class="back-to-shop"><a href="/Product/UNSTITCHED">&leftarrow;</a><span class="text-muted">Back to shop</span></div> *@
+
+                <a @onclick="Checkout" class="btn btn-dark btn-block">CHECK OUT</a>
+                <div class="back-to-shop">
+                    <a @onclick="NavigateToShop">&leftarrow;</a>
+                    <span class="text-muted">Back to shop</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src='#'></script>
+    <script type='text/javascript' src='#'></script>
+    <script type='text/javascript' src='#'></script>
+    <script type='text/javascript'></script> <!-- Remove the '#' since it's not a valid URL -->
+    <script type='text/javascript'>
+        var myLink = document.querySelector('a[href="#"]');
+        myLink.addEventListener('click', function (e) {
+            e.preventDefault();
+        });
+    </script>
+
+
+</body>
+</html>
+
+
+
+@code {
+    [Parameter]
+    public string productsjson { get; set; }
+    public List<Product> p = new List<Product>();
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(productsjson))
+        {
+            // Deserialize the JSON string to a Product object
+            p = System.Text.Json.JsonSerializer.Deserialize<List<Product>>(productsjson);
+        }
+    }
+
+
+    private void NavigateToShop()
+    {
+        nv.NavigateTo("/products");
+    }
+
+    private void Checkout()
+    {
+        // Serialize the list of products into a JSON string
+        var serializedProducts = System.Text.Json.JsonSerializer.Serialize(p);
+
+        // Encode the JSON string for safe transmission in the URL
+        var encodedProducts = Uri.EscapeDataString(serializedProducts);
+
+        // Pass the serialized list as a query parameter and navigate to the next page
+        nv.NavigateTo($"/checkout/{encodedProducts}");
+    }
+
+}

@@ -1,0 +1,100 @@
+﻿@page "/Track"
+@using Ilyasi_Garments.Models;
+@inject NavigationManager nv
+@inject ViewModelService v
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+
+<div class="container mt-4 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled d-flex flex-wrap styles justify-content-center">
+                @foreach (var c in viewModel.Categories)
+                {
+                    <li>
+                        <div class="col-2">
+                            @if (selectedCategory == c.Type)
+                            {
+                                <button class="list-category btn btn-transparent" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="list-category btn btn-outline-secondary" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fuild text-center mt-3 mb-3 p-3" style="background-color:#f8f8f8">
+    <span style="color: black;font-size: 20px;font-weight: 700;">TRACK YOUR ORDER</span>
+</div>
+
+
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-5 mb-3 col-12">
+            <form>
+                <div class="mb-3">
+                    <label for="orderNumber" class="form-label">Enter Order Number:</label>
+                    <input type="text" class="form-control" id="orderNumber" style="border-radius: 12px;" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="emailAddress" class="form-label">Enter Email Address:</label>
+                    <input type="email" class="form-control" id="emailAddress" style="border-radius: 12px;" required>
+                </div>
+
+
+                <a @onclick="OrderTracking" class="btn btn-dark btn-block w-100">ORDER TRACK BY EMAIL</a>
+            </form>
+        </div>
+
+        <div class="col-md-2 text-center my-auto col-12">
+            <span style="color: black;font-size: 16px;font-weight: 700;">OR</span>
+        </div>
+
+        <div class="col-md mb-3 col-12">
+            <form>
+                <div class="mb-3">
+                    <label for="CNNumber" class="form-label">Enter CN# Number:</label>
+                    <input type="text" class="form-control" id="CNNumber" style="border-radius: 12px;" required>
+                </div>
+
+
+                <a @onclick="OrderTracking" class="btn btn-dark btn-block w-100">ORDER TRACK BY CN#</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    public ViewModel viewModel { get; set; }
+    public List<Product> products { get; set; }
+    private string selectedCategory { get; set; } = string.Empty;
+    protected override void OnInitialized()
+    {
+        viewModel = new ViewModel();
+        viewModel.Products = v.GetProducts();
+        viewModel.Categories = v.GetCategories();
+    }
+
+    private void NavigateToCategory(string categoryType)
+    {
+        nv.NavigateTo($"/products/{categoryType}");
+    }
+
+    private void OrderTracking()
+    {
+        nv.NavigateTo("/OrderTracking");
+    }
+}

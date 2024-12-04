@@ -1,0 +1,74 @@
+﻿@page "/"
+@page "/products"
+@page "/products{categoryType}"
+@using Ilyasi_Garments.Models;
+@inject ViewModelService v
+
+<div class="container mt-4 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled d-flex flex-wrap styles justify-content-center">
+                @foreach (var c in viewModel.Categories)
+                {
+                    <li>
+                        <div class="col-2">
+                            @if (selectedCategory == c.Type)
+                            {
+                                <button class="list-category btn btn-transparent" @onclick="() => FilterProducts(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="list-category btn btn-outline-secondary" @onclick="() => FilterProducts(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<Category_com products=products></Category_com>
+
+@code {
+    public ViewModel viewModel { get; set; }
+    public List<Product>products{ get; set; }
+    private string selectedCategory { get; set; } = string.Empty;
+    [Parameter]
+    public string categoryType { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        viewModel = new ViewModel();
+        selectedCategory = "UNISTITCHED";
+        viewModel.Products = v.GetProducts();
+        viewModel.Categories = v.GetCategories();
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Set the selected category from the query parameter
+        selectedCategory = categoryType;
+        FilterProducts(selectedCategory);
+    }
+
+    private void FilterProducts(string categoryType)
+    {
+        selectedCategory = categoryType;
+        foreach(var p in viewModel.Products)
+        {
+            if (p.Type==selectedCategory)
+            {
+                products.Add(p);
+            }
+        }
+        
+    }
+
+
+}

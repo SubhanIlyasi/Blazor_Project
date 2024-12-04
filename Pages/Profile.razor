@@ -1,0 +1,58 @@
+﻿@page "/Profile"
+
+@if(signup){
+   
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="login-container">
+                    <h2 class="text-center mb-4">Sign Up</h2>
+                    <div>
+                        <form id="registerForm"  method="post">
+                       
+                            <hr />
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                <label asp-for="Input.Email">Email</label>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                <label asp-for="Input.Password">Password</label>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-dark">Register</button>
+
+                            <button class="btn btn-link nav-link text-dark" @onclick="ToLogin">
+                                <span style="font-size: 10px; color: black; text-decoration: underline;">Already have an Account? Login Here</span>
+                            </button>
+                           @*  <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
+                                <span style="font-size: 10px; color: black; text-decoration: underline;">Already have an Account? Login Here</span>
+                            </a> *@
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <Login @bind:signup="signup"></Login>
+}
+
+
+@code {
+    public bool signup { get; set; } = true;
+    public void ToLogin()
+    {
+        signup =!signup;
+    }
+}

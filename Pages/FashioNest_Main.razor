@@ -1,0 +1,183 @@
+﻿@page "/Main"
+@using Ilyasi_Garments.Models
+@inject NavigationManager nv
+@inject ViewModelService v
+
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+<div class="container mt-4 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled d-flex flex-wrap styles justify-content-center">
+                @foreach (var c in viewModel.Categories)
+                {
+                    <li>
+                        <div class="col-2">
+                            @if (selectedCategory == c.Type)
+                            {
+                                <button class="list-category btn btn-transparent" @onclick="() => NavigateToCategory(c.Type)" style="border:none;">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="list-category btn btn-outline-secondary" @onclick="() => NavigateToCategory(c.Type)" style="border:none;">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!--Main page content -->
+
+<div class="container-fluid mt-4 mb-5">
+    <div class="row">
+        <img src="images/main/sale.gif" class="img-fluid" alt="Animated GIF">
+
+    </div>
+</div>
+
+<!--Categories-->
+<div class="container mb-3 mt-5">
+    <h2 class="text-center text-decoration-underline mt-3 mb-3" style="font-weight: bold; font-size: 20px;">SHOP BY CATEGORY </h2>
+    <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="images/main/sale_crouse.webp" class="card-img-top img-fluid " alt="sale_crousel" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">SALE</h6>
+
+                                 <a href="index.html" class="btn btn-dark ">SHOP NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card ">
+                            <img src="images/main/unstitched.webp" class="card-img-top img-fluid " alt="Unstitched" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">UNSTITCHED</h6>
+
+                                <a href="Unstitched.html" class="btn btn-dark ">SHOP NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card ">
+                            <img src="images/main/readytowear.webp" class="card-img-top img-fluid " alt="Readytowear" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">READY TO WEAR</h6>
+
+                               <a href="ReadytoWear.html" class="btn btn-dark ">SHOP NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more carousel items with additional categories and images as needed -->
+            <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card ">
+                            <img src="images/main/newarrival.webp" class="card-img-top img-fluid " alt="newarrival" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">NEW ARRIVAL</h6>
+                                <a href="NewIn.html" class="btn btn-dark ">SHOP NOW</a> 
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <img src="images/main/men_crousel.webp" class="card-img-top img-fluid " alt="men" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">MAN</h6>
+                               <a href="Men.html" class="btn btn-dark ">SHOP NOW</a> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="images/main/sbc___beauty.webp" class="card-img-top img-fluid " alt="beautyandaccessories" style="height: 400px;">
+                            <div class="card-body">
+                                <h6 class="card-title text-center" style="font-weight: bold; font-size: 18px;">BEAUTY AND ACCESSORIES</h6>
+
+                                <a href="Accessories.html" class="btn btn-dark ">SHOP NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#categoryCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#categoryCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+<!--end of categories-->
+
+
+<div id="carouselExampleCaptions" class="carousel slide carousel-fade mt-5 mb-0" style="margin-top:1000px;">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <a href="NewIn.html">
+                <img src="images/main/ready.webp" class="d-block w-100" alt="Ready to Wear">
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="Unstitched.html">
+                <img src="images/main/un.webp" class="d-block w-100" alt="Unstitched">
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="Men.html">
+                <img src="images/main/men.webp" class="d-block w-100" alt="Men">
+            </a>
+        </div>
+    </div>
+
+    <!-- Carousel Controls (Updated for Bootstrap 5) -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+@code{
+    public ViewModel viewModel { get; set; }
+    public List<Product> products { get; set; }
+    private string selectedCategory { get; set; } = string.Empty;
+    protected override void OnInitialized()
+    {
+        viewModel = new ViewModel();
+        viewModel.Products = v.GetProducts();
+        viewModel.Categories = v.GetCategories();
+    }
+
+    private void NavigateToCategory(string categoryType)
+    {
+        nv.NavigateTo($"/products/{categoryType}");
+    }
+}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

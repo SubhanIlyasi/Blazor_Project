@@ -1,0 +1,166 @@
+﻿@using Ilyasi_Garments.Models;
+@inject ViewModelService v
+@inject NavigationManager nv
+
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" style="width: 100%;">
+
+            <div class="product-section">
+                <div class="row">
+                    @foreach (var p in products)
+                    {
+                        <div class="col-md-4 col-lg-3 col-sm-6 col-12">
+                            <div class="card product-card" style="padding-bottom:20px;">
+                                <img src="@($"{nv.BaseUri.TrimEnd('/')}{p.ImageUrl}")" class="card-img-top img-fluid" alt="product1">
+
+                                <div class="card-body">
+                                    <button type="button"
+                                            class="btn btn-link button-hover"
+                                            style="padding: 0; text-align: left;"
+                                            @onclick="() => NavigateToProductDetails(p)">
+                                        <p class="card-title" style="font-size: 14px; font-weight: 500; margin-bottom: 0px; white-space: nowrap;color:black;text-decoration:none;">@p.Id</p>
+                                        <p class="card-title" style="font-size: 14px; font-weight: 500; margin-bottom: 0px; white-space: nowrap;color:black;">@p.Name</p>
+                                        <p class="card-text" style="font-size: 12px; color: #878787; margin-top: 0px; margin-bottom: 0px;">@p.Type</p>
+                                        <div style="font-size: 12px; margin-top: 5px; margin-bottom: 15px;">
+                                            <ins style="text-decoration: none;color:black;">
+                                                <span class="money">@p.Price</span>
+                                            </ins>
+                                        </div>
+                                    </button>
+
+
+                                    <div class="product-actions text-center">
+
+                                        @* <form id="add-to-cart-form-@p.Id" data-product-id="@p.Id">
+                                            <!-- Hidden input fields for product details -->
+                                            <input type="hidden" name="Id" value="@p.Id">
+                                            <input type="hidden" name="Name" value="@p.Name">
+                                            <input type="hidden" name="Description" value="@p.Description">
+                                            <input type="hidden" name="Price" value="@p.Price">
+                                            <input type="hidden" name="ImageUrl" value="@p.ImageUrl">
+                                            <input type="hidden" name="Type" value="@p.Type">
+                                            <input type="hidden" name="Color" value="@p.Color">
+                                            <input type="hidden" name="FabricMaterial" value="@p.FabricMaterial">
+
+                                            <!-- Quantity input -->
+                                            <div class="quantity-section mb-2" style="display: flex; justify-content: center; align-items: center;">
+                                                <span class="quantity">Quantity: </span>
+                                                <button type="button" class="btn btn-light btn-sm" onclick="decreaseQuantity('@p.Id')" style="border: 1px solid #ccc; padding: 5px 10px;">-</button>
+                                                <input type="number" name="Quantity" value="1" min="1" max="@p.Quantity" id="quantityInput-@p.Id" style="width: 50px; text-align: center; margin: 0 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                                <button type="button" class="btn btn-light btn-sm" onclick="increaseQuantity('@p.Id')" style="border: 1px solid #ccc; padding: 5px 10px;">+</button>
+                                            </div>
+
+                                            <!-- "Add to Cart" button -->
+                                            <button type="button" class="btn btn-dark mt-2 mb-3" style="width: 100%;" onclick="addToCart('@p.Id')">Add to Cart</button>
+                                        </form> *@
+
+                                        <!-- 1 dec 2024 this is just for the UI I have not included the add to cart functionality Add input field for quantity -->
+                                        <div class="quantity-section mb-2" style="display: flex; justify-content: center; align-items: center;">
+
+
+                                            <label for="quantity">Quantity:</label>
+                                            <input type="number" class="form-control" id="quantityInput" value="1" min="1" name="Quantity" max="@p.Quantity" style="margin-left:15px;">
+                                        </div>
+
+                                        <!-- Update "Add to Cart" button styling -->
+                                        <button type="submit" class="btn btn-dark mt-2 mb-3" style="width: 100%;">
+                                            Add to Cart
+                                        </button>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<Product>products{ get; set; }
+
+    private void NavigateToProductDetails(Product p)
+    {
+        // Serialize the product object to JSON
+        var serializedProduct = System.Text.Json.JsonSerializer.Serialize(p);
+
+        // Encode the JSON string for safe transmission in the URL
+        var encodedProduct = Uri.EscapeDataString(serializedProduct);
+
+        // Pass the serialized object as a query parameter
+        var url = $"/ProductDetails?product={encodedProduct}";
+        nv.NavigateTo(url);
+    }
+
+
+}
+
+<!-- Replace slim version with full version of jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<!-- JavaScript for AJAX -->
+<script>
+    function decreaseQuantity(productId) {
+        const quantityInput = document.getElementById('quantityInput-' + productId);
+        let quantity = parseInt(quantityInput.value);
+        if (quantity > 1) {
+            quantityInput.value = quantity - 1;
+        }
+    }
+
+    function increaseQuantity(productId) {
+        const quantityInput = document.getElementById('quantityInput-' + productId);
+        const maxQuantity = parseInt(quantityInput.max);
+        let quantity = parseInt(quantityInput.value);
+        if (quantity < maxQuantity) {
+            quantityInput.value = quantity + 1;
+        }
+    }
+
+
+    //this is the function for ajax add to cart
+
+    function addToCart(productId) {
+        var form = $('#add-to-cart-form-' + productId);
+        $.ajax({
+            url: '/Product/AddToCart',
+            type: 'POST',
+            data: form.serialize(),
+            success: function (response) {
+                // Make another AJAX call to get the updated cart count
+                $.ajax({
+                    url: '/Product/GetCartCount', // Update this URL to match your routing
+                    type: 'GET',
+                    success: function (countResponse) {
+                        $('#cart').html(countResponse); // Update the cart count
+                    },
+                    error: function () {
+                        console.error("Error retrieving cart count.");
+                    }
+                });
+            },
+            error: function () {
+                alert("Error adding product to cart.");
+            }
+        });
+    }
+
+</script>
+
+<style>
+    .button-hover:hover {
+        text-decoration: none;
+    }
+</style>

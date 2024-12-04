@@ -1,0 +1,191 @@
+﻿@page "/ProductDetails/{productJson}"
+@using Ilyasi_Garments.Models
+@inject NavigationManager nv
+@inject ViewModelService v
+<PageTitle>Ilyasi_Garments</PageTitle>
+
+<div class="container mt-4 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled d-flex flex-wrap styles justify-content-center">
+                @foreach (var c in viewModel.Categories)
+                {
+                    <li>
+                        <div class="col-2">
+                            @if (selectedCategory == c.Type)
+                            {
+                                <button class="list-category btn btn-transparent" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="list-category btn btn-outline-secondary" @onclick="() => NavigateToCategory(c.Type)">
+                                    @c.Type.ToUpper()
+                                </button>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 ">
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <img src="@($"{nv.BaseUri.TrimEnd('/')}{p.ImageUrl}")" class="card-img-top img-fluid" alt="product1">
+        </div>
+
+        <div class="col-md-7 ml-md-4 mt-sm-4 mt-md-0">
+            <h3>@p.Name</h3>
+            <p><strong>Price:</strong> $@p.Price</p>
+            <p><strong>Left in Stock:</strong> @p.Quantity orders in stock</p>
+            <p>@p.Description.</p>
+            <ul>
+                <li><strong>Category:</strong>@p.Type </li>
+                <li><strong>Color:</strong> @p.Color</li>
+                <li><strong>Material:</strong> @p.FabricMaterial</li>
+
+            </ul>
+
+            <div class="form-group">
+
+               @*  <form method="post" action="/Product/AddToCart">
+                    <!-- Add hidden input fields for product details -->
+                    <input type="hidden" name="Id" value="@p.Id">
+                    <input type="hidden" name="Name" value="@p.Name">
+                    <input type="hidden" name="ProductDescription" value="@p.Description">
+                    <input type="hidden" name="Price" value="@p.Price" />
+                    <input type="hidden" name="ImageUrl" value="@p.ImageUrl">
+                    <input type="hidden" name="Type" value="@p.Type">
+                    <input type="hidden" name="Color" value="@p.Color">
+                    <input type="hidden" name="FabricMaterial" value="@p.FabricMaterial">
+
+                    <!-- Add input field for quantity -->
+                    <div class="quantity-section mb-2" style="display: flex; justify-content: center; align-items: center;">
+
+
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" class="form-control" id="quantityInput" value="1" min="1" name="Quantity" max="@p.Quantity" style="margin-left:15px;">
+                    </div>
+
+                    <!-- Update "Add to Cart" button styling -->
+                    <button type="submit" class="btn btn-dark mt-2 mb-3" style="width: 100%;">
+                        Add to Cart
+                    </button>
+                </form> *@
+
+
+                <!-- 1 dec 2024 this is just for UI I have not included the add to cart functionality Add input field for quantity -->
+                <div class="quantity-section mb-2" style="display: flex; justify-content: center; align-items: center;">
+
+
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" class="form-control" id="quantityInput" value="1" min="1" name="Quantity" max="@p.Quantity" style="margin-left:15px;">
+                </div>
+
+                <!-- Update "Add to Cart" button styling -->
+                <button type="submit" class="btn btn-dark mt-2 mb-3" style="width: 100%;">
+                    Add to Cart
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string productJson{ get; set; }
+    public Product p{ get; set; }
+
+    public ViewModel viewModel { get; set; }
+    public List<Product> products { get; set; }
+    private string selectedCategory { get; set; } = string.Empty;
+    protected override void OnInitialized()
+    {
+        viewModel = new ViewModel();
+        viewModel.Products = v.GetProducts();
+        viewModel.Categories = v.GetCategories();
+    }
+
+    private void NavigateToCategory(string categoryType)
+    {
+        nv.NavigateTo($"/products/{categoryType}");
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(productJson))
+        {
+            // Deserialize the JSON string to a Product object
+            p = System.Text.Json.JsonSerializer.Deserialize<Product>(productJson);
+        }
+        else
+        {
+            // Handle the case where productJson is null or empty
+            p = new Product(); // Initialize to avoid null reference exceptions
+        }
+    }
+
+
+
+}
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Replace slim version with full version of jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<!-- JavaScript for AJAX -->
+<script>
+
+    //this is the function for ajax add to cart
+
+    function addToCart(productId) {
+        var form = $('#add-to-cart-form-' + productId);
+        $.ajax({
+            url: '/Product/AddToCart',
+            type: 'POST',
+            data: form.serialize(),
+            success: function (response) {
+                // Make another AJAX call to get the updated cart count
+                $.ajax({
+                    url: '/Product/GetCartCount', // Update this URL to match your routing
+                    type: 'GET',
+                    success: function (countResponse) {
+                        $('#cart').html(countResponse); // Update the cart count
+                    },
+                    error: function () {
+                        console.error("Error retrieving cart count.");
+                    }
+                });
+            },
+            error: function () {
+                alert("Error adding product to cart.");
+            }
+        });
+    }
+
+</script>
+
+<style>
+    .product-image {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
